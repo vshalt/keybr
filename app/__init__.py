@@ -10,8 +10,7 @@ migrate = Migrate()
 login_manager = LoginManager()
 mail = Mail()
 
-# TODO: add login view
-login_manager.login_view = ""
+login_manager.login_view = "auth.login"
 
 
 def create_app(config_name):
@@ -25,7 +24,9 @@ def create_app(config_name):
     migrate.init_app(app, db)
 
     from app.main import main_blueprint
+    from app.auth import auth_blueprint
 
     app.register_blueprint(main_blueprint)
+    app.register_blueprint(auth_blueprint)
 
     return app

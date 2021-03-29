@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="charset" content="UTF-8" 
+    <title>{% block title %}Type Racer{% endblock title %}</title>
+    <link rel="stylesheet" href="url_for('static', 'base.css')" type="text/css" media="screen" />
+    
+  </head>
+  <body>
+    <nav class='navbar'>
+      <ul>
+        <li><a href="{{ url_for('main.home') }}">Home</a></li>
+        <li><a href="{{ url_for('main.about') }}">About<</a></li>
+        <li><a href="{{ url_for('main.race') }}">Race</a></li>
+        <li><a href="{{ url_for('main.leaderboard') }}">Leaderboard</a></li>
+      </ul>
+    </nav>
+    
+    
+  </body>
+</html>
+
