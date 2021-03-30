@@ -1,4 +1,7 @@
 from app import db, login_manager
+from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from flask import current_app
 
 class User(db.Model):
     __tablename__ = "users"
@@ -15,7 +18,48 @@ class User(db.Model):
     highscore = db.Column(db.Integer(), default=0)
     last_ten_scores = db.Column(db.Text)
 
+    @property
+    def password(self):
+        raise AttributeError('Password is not readable')
+
+    @password.setter
+    def password(self, password: str) -> None:
+        self.password_hash = generate_password_hash(password)
+
+    def generate_confirmation_token(self, expiration=3600):
+        s = Serializer(
+            secret_key=current_app.config['SECRET_KEY'], expires_in=expiration
+        )
+        return s.dumps({'confirm': self.id}).decode('utf-8')
+
+    def confirm_token(self, token):
+        s = Serializer(secret_key=current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token.encode('utf-8'))
+        except:
+            return False
+        if data.get(id) != self.id:
+            return False
+        else:
+            self.is_confirmed = True
+            db.session.add(self)
+            return True
+
+    def verify_password(self, password: str) -> bool:
+        return check_password_hash(self.password_hash, password)
+
+    def change_password(self, old: str, new: str) -> bool:
+        if self.verify_password(old):
+            self.password = new
+            db.session.add(self)
+            return True
+        return False
+
+    def change_username(self, new: str) -> None:
+        self.username = new
+        db.session.add(self)
+
 
 @login_manager.user_loader
-def load_user(user_id):
+def load_user(user_id: int) -> User:
     return User.get(user_id)
