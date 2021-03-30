@@ -1,8 +1,6 @@
 from app import db, login_manager
-from flask_login import UserMixin, AnonymousUserMixin
 
-
-class User(db.Model, UserMixin):
+class User(db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), unique=True, index=True, nullable=False)
@@ -16,10 +14,6 @@ class User(db.Model, UserMixin):
     points = db.Column(db.Integer, default=0)
     highscore = db.Column(db.Integer(), default=0)
     last_ten_scores = db.Column(db.Text)
-
-
-class AnonymousUser(AnonymousUserMixin):
-    pass
 
 
 @login_manager.user_loader
