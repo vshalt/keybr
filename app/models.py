@@ -64,6 +64,24 @@ class User(db.Model):
             return False
         return True
 
+    def generate_change_email_token(self, new_email, expiration=3600):
+        s = Serializer(
+            secret_key=current_app.config['SECRET_KEY'], expires_in=expiration
+        )
+        return s.dumps({"id": self.id, "email": new_email}).decode('utf-8')
+
+    def confirm_change_email_token(self, token):
+        s = Serializer(secret_key=current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token.encode('utf-8'))
+        except:
+            return False
+        if data.get("id") != self.id:
+            return False
+        self.email = data.get("email")
+        db.session.add(self)
+        return True
+
     def change_password(self, old: str, new: str) -> bool:
         if self.verify_password(old):
             self.password = new

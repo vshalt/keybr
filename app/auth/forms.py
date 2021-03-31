@@ -1,6 +1,13 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Regexp, Email, EqualTo, Length, ValidationError
+from wtforms.validators import (
+    DataRequired,
+    Regexp,
+    Email,
+    EqualTo,
+    Length,
+    ValidationError
+)
 from app.models import User
 
 
@@ -15,7 +22,7 @@ class RegisterForm(FlaskForm):
                 flags=0,
                 message=(
                     "Username must contain alphanumericals only.\
-                        Username cannot start with '_' or '.'"
+                        Username cannot start with numbers"
                 ),
             ),
         ],
@@ -47,8 +54,22 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember me')
     submit = SubmitField('Login')
 
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField('Old password', validators=[DataRequired()])
+    new_password = PasswordField(
+        'New password',
+        validators=[
+            DataRequired(),
+            EqualTo('confirm_password', message="Password must match")
+        ]
+    )
+    confirm_password = PasswordField(
+        'Confirm password', validators=[DataRequired()]
+    )
+    submit = SubmitField('Change')
 
-class ForgotPasswordForm(FlaskForm):
+
+class RequestForgotPasswordForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Send confirmation link')
 
@@ -62,8 +83,8 @@ class NewPasswordForm(FlaskForm):
         validators=[
             DataRequired(),
             EqualTo('confirm_password', message="Password must match")
-        ]
-        )
+        ],
+    )
     confirm_password = PasswordField(
         'Confirm password', validators=[DataRequired()]
     )
@@ -82,3 +103,26 @@ class ChangeEmailForm(FlaskForm):
     def validate_new_email(self, field):
         if User.query.filter_by(email=field.data.lower()).first():
             raise ValidationError('Email already in use')
+
+class ChangeUsernameForm(FlaskForm):
+    old_username = StringField('Old username', validators=[DataRequired()])
+    new_username = StringField(
+        'New username',
+        validators=[
+            DataRequired(),
+            Regexp(
+                regex="^[a-zA-Z_.][a-zA-Z_.0-9]*$",
+                flags=0,
+                message=(
+                    "Username must contain alphanumericals only.\
+                        Username cannot start with numbers"
+                )
+            ),
+        ]
+    )
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Change username')
+
+    def validate_new_username(self, field):
+        if User.query.filter_by(username=field.data).first():
+            raise ValidationError('Username already exists')
