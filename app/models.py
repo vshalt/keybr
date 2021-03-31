@@ -26,6 +26,9 @@ class User(db.Model):
     def password(self, password: str) -> None:
         self.password_hash = generate_password_hash(password)
 
+    def verify_password(self, password: str) -> bool:
+        return check_password_hash(self.password_hash, password)
+
     def generate_confirmation_token(self, expiration=3600):
         s = Serializer(
             secret_key=current_app.config['SECRET_KEY'], expires_in=expiration
@@ -45,8 +48,21 @@ class User(db.Model):
             db.session.add(self)
             return True
 
-    def verify_password(self, password: str) -> bool:
-        return check_password_hash(self.password_hash, password)
+    def generate_forgot_password_token(self, expiration=3600):
+        s = Serializer(
+            secret_key=current_app.config['SECRET_KEY'], expires_in=expiration
+        )
+        return s.dumps({'forgot': self.id}).decode('utf-8')
+
+    def confirm_forgot_password_token(self, token):
+        s = Serializer(secret_key=current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token.encode('utf-8'))
+        except:
+            return False
+        if data.get('forgot') != self.id:
+            return False
+        return True
 
     def change_password(self, old: str, new: str) -> bool:
         if self.verify_password(old):
