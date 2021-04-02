@@ -1,0 +1,22 @@
+
+// Route to view mappings
+
+{
+    "/": main.home,
+    "/about": main.about,
+    "/change-email/<username>": auth.request_change_email,
+    "/change-email/<username>/<token>": auth.change_email,
+    "/change-pass/<username>": auth.reset_password,
+    "/change-username/<username>": auth.change_username,
+    "/confirm": auth.get_confirmation,
+    "/confirm/<token>": auth.verify_token
+    "/edit/<username>": main.edit_profile,
+    "/forgot": auth.request_forgot_password,
+    "/forgot/<token>": auth.forgot_password,
+    "/leaderboard": main.leaderboard,
+    "/login": auth.login,
+    "/logout": auth.logout,
+    "/profile/<username>": main.profile,
+    "/race": main.race,
+    "/register": auth.register,
+}

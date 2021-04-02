@@ -1,9 +1,10 @@
-from app import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
+from flask_login import AnonymousUserMixin, UserMixin
+from app import db, login_manager
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), unique=True, index=True, nullable=False)
@@ -92,6 +93,11 @@ class User(db.Model):
     def change_username(self, new: str) -> None:
         self.username = new
         db.session.add(self)
+
+class AnonymousUser(AnonymousUserMixin):
+    pass
+
+login_manager.anonymous_user = AnonymousUser
 
 
 @login_manager.user_loader

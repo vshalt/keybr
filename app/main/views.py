@@ -46,11 +46,18 @@ def edit_profile(username):
     return render_template("main/edit-profile.html", user=user, form=form)
 
 
+# TODO: logic
 @main_blueprint.route("/race")
 def race():
+    if current_user.is_anonymous:
+        user = None
+    else:
+        user = current_user
+
     return render_template("main/race.html")
 
 
+# TODO: logic
 @main_blueprint.route("/leaderboard")
 def leaderboard():
     return render_template("main/leaderboard.html")

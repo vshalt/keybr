@@ -157,9 +157,11 @@ def request_change_email(username):
     form.old_email.data = current_user.email
     return render_template('auth/request_change_email.html')
 
-@auth_blueprint.route('/change-email/<token>')
+@auth_blueprint.route('/change-email/<username>/<token>')
 @login_required
-def change_email(token):
+def change_email(username, token):
+    if current_user.username != username:
+        abort(403)
     if current_user.confirm_change_email_token(token):
         db.session.commit()
         flash('Email changed successfully')
