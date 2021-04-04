@@ -1,0 +1,10 @@
+{% for user in users %}
+<div>
+  <a href="{{ url_for('main.profile', username=user.username) }}">
+    <p>
+k     <span>{{ user.username }}</span>
+      <span>{{ user.points }}</span>
+    </p>
+  </a>
+</div>
+{% endfor %}

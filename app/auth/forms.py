@@ -22,7 +22,7 @@ class RegisterForm(FlaskForm):
                 flags=0,
                 message=(
                     "Username must contain alphanumericals only.\
-                        Username cannot start with numbers"
+                    Username cannot start with numbers"
                 ),
             ),
         ],

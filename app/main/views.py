@@ -1,9 +1,12 @@
-from flask import render_template, abort, redirect, url_for
+from flask import (
+    render_template, abort, redirect, url_for, current_app, request )
 from flask_login import login_required, current_user
+from random import shuffle
 from app import db
 from app.main import main_blueprint
 from app.main.forms import EditProfileForm
 from app.models import User
+from words import words
 
 
 @main_blueprint.route("/")
@@ -53,11 +56,21 @@ def race():
         user = None
     else:
         user = current_user
-
-    return render_template("main/race.html")
+    shuffle(words)
+    if user:
+        user.set_league()
+    return render_template("main/race.html", user=user, words=words)
 
 
 # TODO: logic
 @main_blueprint.route("/leaderboard")
 def leaderboard():
-    return render_template("main/leaderboard.html")
+    page = request.args.get('page', 1, type=int)
+    pagination = User.query.order_by(User.points.desc())\
+        .paginate(
+            page, per_page=current_app.config['PER_PAGE'], error_out=False
+        )
+    users = pagination.items
+    return render_template(
+        "main/leaderboard.html", users=users, pagination=pagination
+    )

@@ -3,3 +3,9 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+.about p{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

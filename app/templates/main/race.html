@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}TypeRacer | Race{% endblock title %}
+{% block script %}
+<script type="text/javascript" src="{{ url_for('static', filename='race.js') }}" defer></script>
+{% endblock script %}
+
+{% block content %}
+<div id="text">
+  {{ " ".join(words) }}
+</div>
+
+<input id="typing" type="text" name="typing" value="" />
+{% endblock content %}

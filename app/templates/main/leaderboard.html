@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% import 'macros/pagination.html' as page_macro %}
+
+{% block title %}TypeRacer | Leaderboard{% endblock title %}
+
+{% block content %}
+  {% include 'macros/users.html' %}
+  {{ page_macro.pagination_widget(pagination, 'main.leaderboard') }}
+{% endblock content %}
