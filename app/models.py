@@ -19,6 +19,7 @@ class User(db.Model, UserMixin):
     highscore = db.Column(db.Integer(), default=0)
     last_ten_scores = db.Column(db.Text)
 
+
     @property
     def password(self):
         raise AttributeError('Password is not readable')
@@ -92,6 +93,19 @@ class User(db.Model, UserMixin):
 
     def change_username(self, new: str) -> None:
         self.username = new
+        db.session.add(self)
+
+    def set_league(self):
+        if self.points >= 1000:
+            self.league = 'Diamond'
+        elif self.points >= 800:
+            self.league = 'Platinum'
+        elif self.points >= 600:
+            self.league = 'Gold'
+        elif self.points >=400:
+            self.league = 'Silver'
+        elif self.points >= 100:
+            self.league = 'Bronze'
         db.session.add(self)
 
 class AnonymousUser(AnonymousUserMixin):
