@@ -1,10 +1,11 @@
 *{
-    margin: 0;
-    padding: 0;
+    font-family: Helvetica, sans-serif;
+    scroll-behaviour: smooth;
     box-sizing: border-box;
 }
 
-.about p{
+.about a{
+    color: black !important;
     display: flex;
     align-items: center;
     justify-content: center;

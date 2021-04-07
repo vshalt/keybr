@@ -1,5 +1,5 @@
 from flask import render_template, abort, redirect, url_for, flash
-from flask_login import login_required, current_user, logout_user
+from flask_login import login_required, current_user, logout_user, login_user
 from app import db
 from app.auth import auth_blueprint
 from app.mail import send_mail
@@ -7,13 +7,13 @@ from app.models import User
 from app.auth.forms import (
     ChangePasswordForm,
     RegisterForm,
-    ChangeUsernameForm,
+    LoginForm,
     RequestForgotPasswordForm,
     ChangeEmailForm,
     NewPasswordForm
 )
 
-@auth_blueprint.route('/register')
+@auth_blueprint.route('/register', methods=['POST', 'GET'])
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
@@ -32,11 +32,19 @@ def register():
             token=token, user=user
         )
         return redirect(url_for('auth.login'))
-    return render_template('auth/register.html')
+    return render_template('auth/register.html', form=form)
 
-@auth_blueprint.route('/login')
+@auth_blueprint.route('/login', methods=['POST', 'GET'])
 def login():
-    return render_template('auth/login.html')
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data.lower()).first()
+        if user and user.verify_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            flash('Logged in successfully')
+            return redirect(url_for('main.home'))
+        flash('check credentials and try again')
+    return render_template('auth/login.html', form=form)
 
 @auth_blueprint.route('/logout')
 @login_required
@@ -53,7 +61,7 @@ def get_confirmation():
         return redirect(url_for('main.home'))
     token = current_user.generate_confirmation_token()
     send_mail(
-        template='mail/confirm_account',
+        template='mail/register',
         to=current_user.email,
         subject='Confirm email',
         token = token,
@@ -73,7 +81,7 @@ def verify_token(token):
         flash('Account confirmed!')
     else:
         flash('An error occurred, try again later!')
-    return render_template('auth/confirm.html')
+    return redirect(url_for('main.home'))
 
 @auth_blueprint.route('/change-pass/<username>')
 @login_required
@@ -92,22 +100,6 @@ def reset_password(username):
         flash('Old password is not correct. Try again')
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password.html', form=form)
-
-@auth_blueprint.route('/change-username/<username>')
-@login_required
-def change_username(username):
-    if current_user.username != username:
-        abort(403)
-    form = ChangeUsernameForm()
-    if form.validate_on_submit():
-        if current_user.verify_password(form.password.data):
-            current_user.username = form.username.data
-            db.session.add(current_user)
-            db.session.commit()
-            flash('Username changed successfully')
-            return redirect(url_for('main.home'))
-        flash('Check password and try again')
-    return render_template('auth/change_username.html', form=form)
 
 @auth_blueprint.route('/forgot')
 def request_forgot_password():

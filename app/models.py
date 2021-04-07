@@ -38,12 +38,12 @@ class User(db.Model, UserMixin):
         return s.dumps({'confirm': self.id}).decode('utf-8')
 
     def confirm_token(self, token):
-        s = Serializer(secret_key=current_app.config['SECRET_KEY'])
+        s = Serializer(current_app.config['SECRET_KEY'])
         try:
             data = s.loads(token.encode('utf-8'))
         except:
             return False
-        if data.get(id) != self.id:
+        if data.get('confirm') != self.id:
             return False
         else:
             self.is_confirmed = True
@@ -116,4 +116,4 @@ login_manager.anonymous_user = AnonymousUser
 
 @login_manager.user_loader
 def load_user(user_id: int) -> User:
-    return User.get(user_id)
+    return User.query.get(int(user_id))

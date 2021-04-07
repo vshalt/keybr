@@ -1,0 +1,3 @@
+Hey {{ user.name }},
+Here is your confirmation link:
+{{ url_for('auth.verify_token', token=token, _external=True) }}

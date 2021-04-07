@@ -1,0 +1,5 @@
+<h2>Hey {{ user.name }},</h2>
+
+<p>Here is your confirmation link:</p>
+
+<p>{{ url_for('auth.verify_token', token=token, _external=True) }}</p>

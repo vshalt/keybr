@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% from 'macros/form_field.html' import fields %}
+{% block title %}TypeRacer | Login{% endblock title %}
+{% block content %}
+<form method='POST'>
+  {{ form.hidden_tag() }}
+  {{ fields(form.email) }}
+  {{ fields(form.password) }}
+  {{ fields(form.remember_me,True) }}
+  {{ form.submit(class='btn btn-primary') }}
+</form>
+{% endblock content %}

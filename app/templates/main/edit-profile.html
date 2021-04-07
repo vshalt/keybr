@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% from 'macros/form_field.html' import fields %}
+{% block title %}TypeRacer | EditProfile{% endblock title %}
+
+{% block content %}
+<form method='POST'>
+  {{ form.hidden_tag() }}
+  {{ fields(form.name) }}
+  {{ fields(form.location) }}
+  {{ fields(form.about_me) }}
+  {{ form.submit(class='btn btn-primary') }}
+</form>
+{% endblock content %}

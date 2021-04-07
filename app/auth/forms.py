@@ -104,25 +104,3 @@ class ChangeEmailForm(FlaskForm):
         if User.query.filter_by(email=field.data.lower()).first():
             raise ValidationError('Email already in use')
 
-class ChangeUsernameForm(FlaskForm):
-    old_username = StringField('Old username', validators=[DataRequired()])
-    new_username = StringField(
-        'New username',
-        validators=[
-            DataRequired(),
-            Regexp(
-                regex="^[a-zA-Z_.][a-zA-Z_.0-9]*$",
-                flags=0,
-                message=(
-                    "Username must contain alphanumericals only.\
-                        Username cannot start with numbers"
-                )
-            ),
-        ]
-    )
-    password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Change username')
-
-    def validate_new_username(self, field):
-        if User.query.filter_by(username=field.data).first():
-            raise ValidationError('Username already exists')

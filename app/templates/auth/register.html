@@ -1,8 +1,18 @@
 {% extends 'base.html' %}
-{% block title %}
-Register
-{% endblock title %}
-
+{% from 'macros/form_field.html' import fields %}
+{% block title %}TypeRacer | Register{% endblock title %}
 {% block content %}
-<h1>Register</h1>
+
+<form method='POST'>
+  {{ form.hidden_tag() }}
+  {{ fields(form.username) }}
+  {{ fields(form.email) }}
+  {{ fields(form.password) }}
+  {{ fields(form.confirm_password) }}
+  {{ form.submit(class='btn btn-primary') }}
+</form>
+<small>
+  <a href="{{ url_for('auth.login') }}">Already have an account?</a>
+</small>
+
 {% endblock content %}

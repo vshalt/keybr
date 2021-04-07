@@ -1,0 +1,32 @@
+{% macro fields(field, remember=False) %}
+    {% if remember==True %}
+    <div class='form-group'>
+        {{ field.label }}
+        {% if field.errors %}
+        {{ field }}
+        <div>
+        {% for error in field.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+        </div>
+        {% else %}
+        {{ field }}
+        {% endif %}
+    </div>
+
+    {% else %}
+    <div class='form-group'>
+        {{ field.label }}
+        {% if field.errors %}
+        {{ field(class='form-control is-invalid') }}
+        <div>
+        {% for error in field.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+        </div>
+        {% else %}
+        {{ field(class='form-control') }}
+        {% endif %}
+    </div>
+    {% endif %}
+{% endmacro  %}
