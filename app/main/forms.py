@@ -1,8 +1,18 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, RadioField
 from wtforms.validators import Length, ValidationError, DataRequired, Regexp
 from app.models import User
 
+
+class SelectDurationForm(FlaskForm):
+    time = RadioField(
+        'Duration',
+        choices=[(1, 'one minute'), (2, 'two minutes')],
+        coerce=int,
+        default=1
+    )
+    submit = SubmitField('Start')
+    
 
 class EditProfileForm(FlaskForm):
     username = StringField(

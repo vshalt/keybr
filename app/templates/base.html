@@ -35,10 +35,15 @@
       <ul class="navbar-nav mr-auto">
         <li class="nav-item"><a class="nav-link" href="{{ url_for('main.home') }}">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url_for('main.about') }}">About</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('main.race') }}">Race</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url_for('main.leaderboard') }}">Leaderboard</a></li>
+        {% if current_user.is_anonymous %}
         <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}">Register</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
+        {% elif current_user.is_authenticated %}
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a></li>
+        {% block nav %}
+        {% endblock nav %}
+        {% endif %}
       </ul>
       </div>
     </nav>
@@ -49,11 +54,18 @@
     {% for category, message in get_flashed_messages(with_categories=true) %}
             <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
               {{ message }}
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <button type="button" class="flash close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
     {% endfor %}
+    {% endif %}
+    {% if not current_user.is_anonymous %}
+      {% if not current_user.is_confirmed %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            Confirm your account!  <a style="color: #333;" href={{ url_for('auth.get_confirmation') }}>Check email, if no mail click here</a>
+        </div>
+      {% endif %}
     {% endif %}
     {% block messages %}
     {% endblock messages %}
@@ -63,6 +75,13 @@
     </div>
     <footer>
     </footer>
+    <script>
+      setTimeout(() => {
+      for (item of document.getElementsByClassName('flash')) {
+          setTimeout(() => {item.click()}, 2999)
+      }
+      }, 1000);
+    </script>
   </body>
 </html>
 

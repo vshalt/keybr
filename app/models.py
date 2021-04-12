@@ -16,9 +16,6 @@ class User(db.Model, UserMixin):
     about_me = db.Column(db.Text())
     league = db.Column(db.String(16), default="unranked")
     points = db.Column(db.Integer, default=0)
-    highscore = db.Column(db.Integer(), default=0)
-    last_ten_scores = db.Column(db.Text)
-
 
     @property
     def password(self):
@@ -56,15 +53,19 @@ class User(db.Model, UserMixin):
         )
         return s.dumps({'forgot': self.id}).decode('utf-8')
 
-    def confirm_forgot_password_token(self, token):
+    @staticmethod
+    def confirm_forgot_password_token(token, new_password):
         s = Serializer(secret_key=current_app.config['SECRET_KEY'])
         try:
             data = s.loads(token.encode('utf-8'))
         except:
             return False
-        if data.get('forgot') != self.id:
-            return False
-        return True
+        user = User.query.get(data.get('forgot'))
+        if user:
+            user.password = new_password
+            db.session.add(user)
+            return True 
+        return False
 
     def generate_change_email_token(self, new_email, expiration=3600):
         s = Serializer(
@@ -107,6 +108,7 @@ class User(db.Model, UserMixin):
         elif self.points >= 100:
             self.league = 'Bronze'
         db.session.add(self)
+        db.session.commit()
 
 class AnonymousUser(AnonymousUserMixin):
     pass

@@ -1,5 +1,41 @@
 {% extends 'base.html' %}
 {% block title %}TypeRacer | Home{% endblock title %}
+{% block script %}
+<style>
+  .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+  }
+  .form{
+      background: #1c1c1c;
+      padding: 1.5rem;
+      border-radius: 15px;
+      width: 200px;
+      box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  .form .btn {
+      margin-top: 1rem;
+  }
+</style>
+{% endblock script %}
 
 {% block content %}
+<div class='container'>
+  <h3 class='text-center'> Select duration for test</h3>
+  <form class='form' method='POST'>
+    {{ form.hidden_tag() }}
+    <div class='form-check'>
+    <input class='form-check-input' type='radio' name='time' id='one' checked value={{ form.time.choices[0][0] }}>
+    <label class='form-check-label' for='one'>{{ form.time.choices[0][1] }}</label>
+    </div>
+    <div class='form-check'>
+    <input class='form-check-input' type='radio' name='time' id='two' value={{ form.time.choices[1][0] }}>
+    <label class='form-check-label' for='two'>{{ form.time.choices[1][1] }}</label>
+    </div>
+    {{ form.submit(class='btn btn-primary') }}
+
+  </form>
+</div>
 {% endblock content %}

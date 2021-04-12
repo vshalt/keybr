@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}TypeRacer | Profile{% endblock title %}
 {% from 'macros/form_field.html' import fields %}
+{% block nav %}
+<li class='nav-item'>
+    <a class='nav-link' href="{{ url_for('auth.request_change_email', username=current_user.username) }}">Change Email</a>
+</li>
+{% endblock nav %}
 {% block content %}
 {% if current_user.username == user.username %}
     <form method='POST'>

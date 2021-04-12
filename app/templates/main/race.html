@@ -1,13 +1,51 @@
 {% extends 'base.html' %}
 {% block title %}TypeRacer | Race{% endblock title %}
 {% block script %}
-<script type="text/javascript" src="{{ url_for('static', filename='race.js') }}" defer></script>
+<style>
+  #content {
+      color: black;
+  }
+  .jumbotron {
+      padding: 0.5rem !important;
+  }
+  #retry-container{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+  #timer {
+      background: white;
+      color: black;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-left: 2rem;
+  }
+</style>
+<script>
+  var time = {{ time }}
+  var is_user = {% if user %}1{% else %}0{% endif %}
+  var username = {% if user %}'{{ user.username }}'{% else %}0{% endif %}
+</script>
+<script type="module" src="{{ url_for('static', filename='main/race.js') }}" defer></script>
 {% endblock script %}
 
 {% block content %}
-<div id="text">
-  {{ " ".join(words) }}
+<div id='container' class='container'>
+  <div id='jumbotron' class='jumbotron'>
+    <h5 id='content'></h5>
+  </div>
+  <div class='form-group'>
+    <input id='typer' autofocus autocomplete='off' type='text' class='form-control'>
+  </div>
 </div>
-
-<input id="typing" type="text" name="typing" value="" />
+<div id='btn-timer' align='center'>
+  <div id='retry-container'>
+    <button type='submit' id='retry' name='retry' class='btn btn-primary'>Retry!</button>
+    <div id='timer'>{% if time == 1 %}
+        60
+      {% elif time == 2 %}
+        120
+      {% endif %}
+    </div>
+  </div>
 {% endblock content %}

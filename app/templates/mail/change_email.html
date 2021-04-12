@@ -1,0 +1,3 @@
+<p>Hey {{ user.username }},</p>
+<p> Here is your link to confirm new email:</p>
+<p>{{ url_for('auth.change_email', username=user.username, token=token, _external=True) }}</p>

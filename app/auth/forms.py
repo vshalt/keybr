@@ -91,14 +91,9 @@ class NewPasswordForm(FlaskForm):
     submit = SubmitField('Confirm')
 
 class ChangeEmailForm(FlaskForm):
-    old_email = StringField('Old email', validators=[DataRequired(), Email()])
     new_email = StringField('New email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Change')
-
-    def validate_old_email(self, field):
-        if User.query.filter_by(email=field.data.lower()).first() is None:
-            raise ValidationError('Check email')
 
     def validate_new_email(self, field):
         if User.query.filter_by(email=field.data.lower()).first():

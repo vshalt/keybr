@@ -2,17 +2,24 @@ from flask import (
     render_template, abort, redirect, url_for, current_app, request, flash
 )
 from flask_login import login_required, current_user
-from random import shuffle
 from app import db
 from app.main import main_blueprint
-from app.main.forms import EditProfileForm
+from app.main.forms import EditProfileForm, SelectDurationForm
 from app.models import User
-from words import words
 
 
-@main_blueprint.route("/")
+@main_blueprint.route("/", methods=['POST', 'GET'])
 def home():
-    return render_template("main/home.html")
+    form = SelectDurationForm()
+    flash(
+        'Computer is recommended for this website. Login to get ranked',
+        'success'
+    )
+    if form.validate_on_submit():
+        print(form.time.choices[0])
+        time = form.time.data
+        return redirect(url_for('main.race', time=time))
+    return render_template("main/home.html", form=form)
 
 
 @main_blueprint.route("/about")
@@ -48,20 +55,30 @@ def profile(username):
         return render_template("main/profile.html", user=user)
 
 
-# TODO: logic
-@main_blueprint.route("/race")
-def race():
+@main_blueprint.route("/race/<int:time>")
+def race(time):
     if current_user.is_anonymous:
         user = None
     else:
         user = current_user
-    shuffle(words)
     if user:
         user.set_league()
-    return render_template("main/race.html", user=user, words=words)
+    return render_template("main/race.html", user=user, time=time)
 
+@main_blueprint.route("/post-race", methods=['POST'])
+def post_race():
+    if request.method == 'POST':
+        points = request.values.get('points')
+        username = request.values.get('username')
+        if username:
+            user = User.query.filter_by(username=username).first()
+            if user:
+                user.points += int(points)
+                db.session.add(user)
+                db.session.commit()
+                user.set_league()
+    return '', 200
 
-# TODO: logic
 @main_blueprint.route("/leaderboard")
 def leaderboard():
     page = request.args.get('page', 1, type=int)

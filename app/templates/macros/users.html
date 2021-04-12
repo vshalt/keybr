@@ -1,10 +1,11 @@
 {% for user in users %}
-<div>
-  <a href="{{ url_for('main.profile', username=user.username) }}">
-    <p>
-k     <span>{{ user.username }}</span>
-      <span>{{ user.points }}</span>
-    </p>
+<div class='jumbotron'>
+  <a class='link' href="{{ url_for('main.profile', username=user.username) }}">
+    <h3 class='user-container'>
+      <span>@{{ user.username }}</span>
+      <span>{{ user.league }}</span>
+      <span>Points: {{ user.points }}</span>
+    </h3>
   </a>
 </div>
 {% endfor %}

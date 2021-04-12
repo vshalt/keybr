@@ -3,7 +3,27 @@
 
 {% block title %}TypeRacer | Leaderboard{% endblock title %}
 
+{% block script %}
+<style>
+  .container .jumbotron {
+      padding: 1rem 2rem;
+  }
+  .user-container {
+      display: flex;
+      justify-content: space-between;
+  }
+  .link {
+      color: black;
+  }
+  .link:hover {
+      color: grey;
+      text-decoration: none;
+  }
+</style>
+{% endblock script %}
 {% block content %}
+<div class='container'>
   {% include 'macros/users.html' %}
   {{ page_macro.pagination_widget(pagination, 'main.leaderboard') }}
+</div>
 {% endblock content %}
