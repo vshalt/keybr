@@ -21,6 +21,13 @@
   .navbar-dark {
       background: #1c1c1c !important;
   }
+  .navbar {
+      position: relative;
+  }
+  .contact {
+      position: absolute;
+      right: 1rem;
+  }
 </style>
     
   </head>
@@ -34,15 +41,16 @@
       <div class="collapse navbar-collapse" id="navbarToggle">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item"><a class="nav-link" href="{{ url_for('main.home') }}">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('main.about') }}">About</a></li>
+        <li class="nav-item contact"><a class="nav-link" href="{{ url_for('main.about') }}">Contact</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url_for('main.leaderboard') }}">Leaderboard</a></li>
         {% if current_user.is_anonymous %}
         <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}">Register</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
         {% elif current_user.is_authenticated %}
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('main.profile', username=current_user.username) }}">Profile</a></li>
         {% block nav %}
         {% endblock nav %}
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a></li>
         {% endif %}
       </ul>
       </div>

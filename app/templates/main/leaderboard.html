@@ -23,6 +23,7 @@
 {% endblock script %}
 {% block content %}
 <div class='container'>
+  <p> Click on the username to view the player's profile</p>
   {% include 'macros/users.html' %}
   {{ page_macro.pagination_widget(pagination, 'main.leaderboard') }}
 </div>

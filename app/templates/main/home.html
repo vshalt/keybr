@@ -2,6 +2,11 @@
 {% block title %}TypeRacer | Home{% endblock title %}
 {% block script %}
 <style>
+  body {
+      position: relative;
+      min-height: 100vh;
+      width: 100vw;
+  }
   .container {
       display: flex;
       justify-content: center;
@@ -17,6 +22,19 @@
   }
   .form .btn {
       margin-top: 1rem;
+  }
+  footer {
+      position: absolute;
+      bottom: 1rem;
+      right: 0;
+      left: 0;
+      font-size: 1.2rem;
+  }
+  footer span {
+      background: #ccc;
+      border-radius: 5px;
+      padding: 0.5rem;
+      color: black;
   }
 </style>
 {% endblock script %}
@@ -38,4 +56,7 @@
 
   </form>
 </div>
+<footer class='text-center'>
+  <span>Made by <a href="https://github.com/vshalt">vshalt</a></span>
+</footer>
 {% endblock content %}

@@ -1,6 +1,46 @@
 {% extends 'base.html' %}
 {% block title %}TypeRacer | Profile{% endblock title %}
 {% from 'macros/form_field.html' import fields %}
+{% block script %}
+<style>
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+    .fa-10x {
+        font-size: 15rem;
+        padding-right: 2rem;
+    }
+    h4 {
+        margin: 0.8rem 0.1rem;
+    }
+    .tag {
+        background: #ddd;
+        padding: 0.2rem;
+        border-radius: 5px;
+        color: #2980b9;
+        margin-right: 0.5rem;
+    }
+    .value {
+        background: #ddd;
+        padding: 0.2rem;
+        border-radius: 5px;
+        color: black;
+    }
+    .table {
+        display: flex;
+        justify-content: center;
+    }
+    .col1 {
+        width: 150px;
+    }
+    .col2 {
+        width: 400px;
+    }
+</style>
+{% endblock script %}
 {% block nav %}
 <li class='nav-item'>
     <a class='nav-link' href="{{ url_for('auth.request_change_email', username=current_user.username) }}">Change Email</a>
@@ -17,10 +57,40 @@
         {{ form.submit(class='btn btn-primary') }}
     </form>
 {% elif current_user.username != user.username %}
-    <p>Username: {{ user.username }}</p>
-    <p>Email: {{ user.email }}</p>
-    <p>Name: {{ user.name }}</p>
-    <p>Location: {{ user.location }}</p>
-    <p>About: {{ user.about_me }}</p>
+    <div class='container'>
+        <div class='league'>
+        {% if user.league == 'Diamond' %}
+            <i class="fa-10x fab fa-dailymotion"></i>
+        {% elif user.league == 'Platinum' %}
+            <i class="fa-10x fas fa-parking"></i>
+        {% elif user.league == 'Gold' %}
+            <i class="fa-10x fab fa-google"></i>
+        {% elif user.league == 'Silver' %}
+            <i class="fa-10x fab fa-stripe-s"></i>
+        {% elif user.league == 'Bronze' %}
+            <i class="fa-10x fab fa-bootstrap"></i>
+        {% elif user.league == 'Unranked' %}
+            <i class="fa-10x fas fa-exclamation-circle"></i>
+        {% endif %}
+        </div>
+        <div class='table'>
+            <div class='col1'>
+                <h4 class='tag'>Username:</h4>
+                <h4 class='tag'>Points:</h4>
+                <h4 class='tag'>League:</h4>
+                <h4 class='tag'>Name:</h4>
+                <h4 class='tag'>Location:</h4>
+                <h4 class='tag'>About:</h4>
+            </div>
+            <div class='col2'>
+                <h4 class='value'>{{ user.username }}</h4>
+                <h4 class='value'>{{ user.points }}</h4>
+                <h4 class='value'>{{ user.league }}</h4>
+                <h4 class='value'>{{ user.name }}</h4>
+                <h4 class='value'>{{ user.location }}</h4>
+                <h4 class='value'>{{ user.about_me }}</h4>
+            </div>
+        
+    </div>
 {% endif %}
 {% endblock content %}
