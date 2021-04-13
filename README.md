@@ -1,6 +1,6 @@
 # TypeRacer
 
-You can try the live hosted app here:
+You can try the live hosted app here: https://keybr.herokuapp.com/
 
 ![TypeRacer](./images/home.png)
 
@@ -35,7 +35,7 @@ A simple website to train on your typing muscles and compete with others on the 
 
 ## How To Use
 
-You can navigate to the link to view the hosted website here:
+You can navigate to the link to view the hosted website here: https://keybr.herokuapp.com/
 
 
 
