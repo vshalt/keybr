@@ -28,11 +28,12 @@ def about():
 
 
 @main_blueprint.route("/profile/<username>", methods=['POST', 'GET'])
-@login_required
 def profile(username):
     user = User.query.filter_by(username=username).first()
     if user is None:
         abort(404)
+    if current_user.is_anonymous:
+        return render_template('main/profile.html', user=user)
     if current_user.username == user.username:
         old_username = user.username
         form = EditProfileForm()
